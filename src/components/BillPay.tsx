@@ -56,7 +56,7 @@ export function BillPayHome() {
         <Input placeholder="Reference Number" value={referenceNumber} name="referenceNumber" onChange={handleReferenceNumberChange} />
         <Input placeholder="Amount" type="text" value={amount} name="amount" onChange={handleAmountChange} />
         {error && <div className="text-red-500">{error}</div>}
-        <Button onClick={handleSimulatePaymentClick} disabled={!referenceNumber || !amount} >Simulate Payment</Button>
+        <Button onClick={handleSimulatePaymentClick} disabled={!referenceNumber || !amount || isLoading} >Simulate Payment</Button>
 
       </div>
       <div className="w-1/2 bg-[#1E1E2D] p-8 overflow-y-auto">
@@ -70,15 +70,21 @@ export function BillPayHome() {
               <CheckCircleIcon className="text-green-500 mr-2" />
               Entered Amount: {formatAmount(amount)}{"\n          "}
             </div>
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <div className="flex items-center justify-center space-x-2">
+              <div className="animate-spin h-8 w-8 border-t-2 border-white-900 rounded-full" />
+              <p className="text-sm text-white-500 dark:text-white-500">Loading...</p>
+            </div>}
             {errorInfo && <div className="mb-4 p-4 bg-[#24243B] text-white rounded">
               <ErrorIcon className="text-red-500 mr-2" />
               {errorInfo?.errors ? errorInfo?.errors?.map((error: string) => <div key={error}>Error: {error} {"\n          "}</div>) : <div>Error: {errorInfo.message} {"\n          "}</div>}
             </div>}
-            {simulationResults && <div className="mb-4 p-4 bg-[#24243B] text-white rounded">
+            {simulationResults && !isLoading && <div className="mb-4 p-4 bg-[#24243B] text-white rounded">
               <CheckCircleIcon className="text-green-500 mr-2" />
-              Results: {"\n          "}
-              {simulationResults}
+              Payment Results.. {"\n          "}
+              <div className="mt-2 p-2 bg-[#2D2D3A] rounded">
+                <p className="text-md">Message: Payment {simulationResults?.message}</p>
+                <p className="text-md">Transaction-ID: {simulationResults?.transactionId}</p>
+              </div>
             </div>}
           </>
         }
@@ -101,8 +107,8 @@ export function BillPayHome() {
         setIsLoading(false);
         return
       }
-      console.log('Payment simulation successful:', data);
-      setIsLoading(false); // Set loading status to false after API call is complete
+      setAmount('');
+      setIsLoading(false);
       setSimulationResults(data)
     } catch (error) {
       console.error('Error simulating payment:', JSON.stringify(error, null, 2));
