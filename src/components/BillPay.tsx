@@ -21,7 +21,9 @@ export function BillPayHome() {
 
   const handleReferenceNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReferenceNumber(event.target.value);
-    setError(''); setErrorInfo(null);
+    setError('');
+    setErrorInfo(null);
+    simulationResults(null)
   };
 
 
@@ -33,6 +35,7 @@ export function BillPayHome() {
     setAmount(inputAmount);
     setError('');
     setErrorInfo(null);
+    simulationResults(null)
   };
 
 
