@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CheckCircleIcon, ErrorIcon } from "./Icons"
 import { useState } from "react";
+import SetCallbackURL from "./SetCallbackURL";
+import { Separator } from "./ui/separator";
 
 const formatAmount = (inputAmount: string) => {
   const numericValue = parseFloat(inputAmount);
@@ -54,15 +56,20 @@ export function BillPayHome() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex flex-col w-1/2 p-8 space-y-4">
-        <div className="font-bold text-2xl">BillPay Simulator</div>
-        <Input placeholder="Reference Number" value={referenceNumber} name="referenceNumber" onChange={handleReferenceNumberChange} />
-        <Input placeholder="Amount" type="text" value={amount} name="amount" onChange={handleAmountChange} />
-        {error && <div className="text-red-500">{error}</div>}
-        <Button onClick={handleSimulatePaymentClick} disabled={!referenceNumber || !amount || isLoading} >Simulate Payment</Button>
-
+      <div className="flex flex-col w-1/2 ">
+        <div className="mb-auto p-8 space-y-4">
+          <div className="font-bold text-2xl">BillPay Simulator</div>
+          <Input placeholder="Reference Number" value={referenceNumber} name="referenceNumber" onChange={handleReferenceNumberChange} />
+          <Input placeholder="Amount" type="text" value={amount} name="amount" onChange={handleAmountChange} />
+          {error && <div className="text-red-500">{error}</div>}
+          <Button onClick={handleSimulatePaymentClick} disabled={!referenceNumber || !amount || isLoading} >Simulate Payment</Button>
+        </div>
+        <Separator className="" />
+        <div className="flex h-10 items-center space-x-4 text-sm">
+        <SetCallbackURL />
+        </div>
       </div>
-      <div className="w-1/2 bg-[#1E1E2D] p-8 overflow-y-auto">
+      <div className="w-1/2 bg-[#1E1E2D] p-8">
         {showLogs &&
           <>
             <div className="mb-4 p-4 bg-[#24243B] text-white rounded">
