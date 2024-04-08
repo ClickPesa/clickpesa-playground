@@ -1,4 +1,4 @@
-import { BillPayHome } from "../components/BillPay";
+import { BillPayHome } from "../components/bill-pay";
 
 export default function Home() {
   return (
