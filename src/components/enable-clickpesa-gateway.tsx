@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRightIcon } from "./Icons";
-import { useSetBrandId } from "@/app/thl/services";
+import { useSetBrandId } from "@/app/lms/services";
 import { formatErrorMessage } from "@/utils/util";
 
 const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
