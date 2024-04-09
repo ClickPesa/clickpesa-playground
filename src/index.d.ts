@@ -1,16 +1,16 @@
 export interface Payment {
   id: string;
-  payment_id: string;
   status: string;
   paymentReference: string;
-  order_reference: string;
-  receipt?: string;
-  amount: string;
-  currency: string;
+  orderReference: string;
+  collectedAmount: string;
+  collectedCurrency: string;
   message: string;
-  created_at: string;
+  customer?: { customerName: string; customerPhoneNumber: string };
   last_updated?: string;
-  customer: { customerName: string; customerPhoneNumber: string };
+  created_at?: string;
+  customer_id?: string;
+  customer_name?: string;
 }
 
 export interface Loan {

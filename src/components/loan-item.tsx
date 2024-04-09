@@ -44,18 +44,19 @@ const LoanItem = ({
             return (
               <div
                 className="border rounded p-2 flex flex-col gap-1 mb-2"
-                key={payment?.payment_id}
+                key={payment?.id}
               >
-                <span>ID: {payment?.payment_id}</span>
+                <span>ID: {payment?.id}</span>
                 <span>Status: {payment?.status}</span>
                 <span>
-                  Amount: {payment?.amount} {payment?.currency}
+                  Amount: {payment?.collectedAmount}{" "}
+                  {payment?.collectedCurrency}
                 </span>
-                <span>Order Reference: {payment?.order_reference}</span>
+                <span>Order Reference: {payment?.orderReference}</span>
                 <span>Message: {payment?.message}</span>
-                <span>Order Reference: {payment?.order_reference}</span>
-                {payment?.receipt && <span>Receipt: {payment?.receipt}</span>}
-                <span>Initiated: {formatDate(payment?.created_at)}</span>
+                {payment?.created_at && (
+                  <span>Initiated: {formatDate(payment?.created_at)}</span>
+                )}
                 {payment?.last_updated && (
                   <span>Updated: {formatDate(payment?.last_updated)}</span>
                 )}

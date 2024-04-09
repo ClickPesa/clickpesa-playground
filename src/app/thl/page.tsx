@@ -35,7 +35,7 @@ const Page = () => {
   return (
     <div className="container max-w-[800px]">
       <div className="border-b flex justify-between items-center gap-4 py-4">
-        <h1 className="font-bold text-4xl">THL</h1>
+        <h1 className="font-bold text-4xl">LMS</h1>
         <div className="flex gap-3 items-center">
           <Button
             variant={"outline"}

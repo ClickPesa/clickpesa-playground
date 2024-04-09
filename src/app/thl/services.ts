@@ -12,7 +12,10 @@ export const useSetBrandId = () => {
     async (payload: { brand_id: string }) => {
       const { data } = await axios.post(
         `${API_URL}/api/merchants/sync-merchant-brand-id`,
-        payload
+        payload,
+        {
+          timeout: 20000,
+        }
       );
       return data;
     },
