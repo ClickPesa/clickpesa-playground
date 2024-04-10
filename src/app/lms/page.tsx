@@ -77,7 +77,7 @@ const Page = () => {
       )}
       {!loans?.length && !loansLoading ? (
         <div className="flex flex-col items-center gap-3 h-24 justify-center">
-          <p>You haven't created any loan yet</p>
+          <p>You have no loan created yet</p>
           <Button onClick={() => setOpenCreateLoan(true)}>Create</Button>
         </div>
       ) : null}

@@ -69,12 +69,11 @@ export function BillPayHome({
     }
   };
 
-
   return (
     <div className="flex h-screen">
       <div className="flex flex-col w-1/2 ">
         <div className="mb-auto p-8 space-y-4">
-          <div className="font-bold text-2xl">BillPay Simulator</div>
+          <div className="font-bold text-2xl">BillPay Simulat</div>
           <Input
             placeholder="Reference Number"
             value={billReference}

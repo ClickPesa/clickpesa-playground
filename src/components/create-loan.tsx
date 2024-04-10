@@ -48,6 +48,7 @@ const CreateLoan = ({ close }: { close: () => void }) => {
               <li
                 className="bg-neutral-100 rounded-lg p-2 cursor-pointer"
                 onClick={() => setMerchant(merchant?.referenceID)}
+                key={merchant?.referenceID}
               >
                 {merchant?.referenceID}
               </li>
