@@ -9,7 +9,7 @@ export const useSetBrandId = () => {
   const { loansRefetch } = useGetLoans();
   const { merchantsRefetch } = useGetMerchants();
   const { data, error, mutateAsync, mutate, isLoading } = useMutation(
-    async (payload: { brand_id: string }) => {
+    async (payload: { offlineReference: string }) => {
       const { data } = await axios.post(
         `${API_URL}/api/merchants/sync-merchant-brand-id`,
         payload,

@@ -54,11 +54,30 @@ const LoanItem = ({
                 </span>
                 <span>Order Reference: {payment?.orderReference}</span>
                 <span>Message: {payment?.message}</span>
-                {payment?.created_at && (
-                  <span>Initiated: {formatDate(payment?.created_at)}</span>
+                {payment?.createdAt && (
+                  <span>Initiated: {formatDate(payment?.createdAt)}</span>
                 )}
-                {payment?.last_updated && (
-                  <span>Updated: {formatDate(payment?.last_updated)}</span>
+                {payment?.updatedAt && (
+                  <span>Updated: {formatDate(payment?.updatedAt)}</span>
+                )}
+                {payment?.customer && (
+                  <>
+                    {payment?.customer?.customerName && (
+                      <span>
+                        Customer Name: {payment?.customer?.customerName}
+                      </span>
+                    )}
+                    {payment?.customer?.customerEmail && (
+                      <span>
+                        Customer Email: {payment?.customer?.customerEmail}
+                      </span>
+                    )}
+                    {payment?.customer?.customerPhoneNumber && (
+                      <span>
+                        Customer Phone: {payment?.customer?.customerPhoneNumber}
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
             );

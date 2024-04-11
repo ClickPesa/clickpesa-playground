@@ -17,7 +17,7 @@ import { useSetBrandId } from "@/app/lms/services";
 import { formatErrorMessage } from "@/utils/util";
 
 const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
-  const [brand_id, set_brand_id] = useState("");
+  const [offlineReference, setOfflineReference] = useState("");
   const { setBrandIdLoading, setBrandIdError, setBrandId } = useSetBrandId();
 
   return (
@@ -29,8 +29,8 @@ const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
           </Label>
           <Input
             id="brand_id"
-            value={brand_id}
-            onChange={(e) => set_brand_id(e.target.value)}
+            value={offlineReference}
+            onChange={(e) => setOfflineReference(e.target.value)}
             readOnly={setBrandIdLoading}
             placeholder="Enter Your Offline Reference"
           />
@@ -42,7 +42,7 @@ const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
           disabled={setBrandIdLoading}
           onClick={() => {
             setBrandId({
-              brand_id,
+              offlineReference,
             });
           }}
         >

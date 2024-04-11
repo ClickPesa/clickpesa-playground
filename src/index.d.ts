@@ -6,11 +6,13 @@ export interface Payment {
   collectedAmount: string;
   collectedCurrency: string;
   message: string;
-  customer?: { customerName: string; customerPhoneNumber: string };
-  last_updated?: string;
-  created_at?: string;
-  customer_id?: string;
-  customer_name?: string;
+  customer?: {
+    customerName: string;
+    customerPhoneNumber?: string;
+    customerEmail?: string;
+  };
+  updatedAt?: string;
+  createdAt?: string;
 }
 
 export interface Loan {
