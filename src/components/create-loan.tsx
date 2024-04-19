@@ -92,13 +92,13 @@ const CreateLoan = ({ close }: { close: () => void }) => {
               name,
             }).then((res) => {
               if (res?.payout?.payoutLink) {
-                // const newTab = window.open(
-                //   res?.payout?.payoutLink +
-                //     "&returnUrl=" +
-                //     window.location.origin,
-                //   "_blank"
-                // );
-                // newTab?.focus();
+                const newTab = window.open(
+                  res?.payout?.payoutLink +
+                    "&returnUrl=" +
+                    window.location.origin,
+                  "_blank"
+                );
+                newTab?.focus();
               } else {
                 close();
               }
