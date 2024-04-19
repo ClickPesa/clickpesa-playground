@@ -1,15 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRightIcon } from "./Icons";
@@ -18,10 +8,23 @@ import { formatErrorMessage } from "@/utils/util";
 
 const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
   const [offlineReference, setOfflineReference] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const { setBrandIdLoading, setBrandIdError, setBrandId } = useSetBrandId();
 
   return (
-    <>
+    <div className="space-y-5">
+      <div>
+        <Label htmlFor="api_key" className="sr-only">
+          API Key
+        </Label>
+        <Input
+          id="api_key"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          readOnly={setBrandIdLoading}
+          placeholder="Enter Your API Key"
+        />
+      </div>
       <div className="flex items-center space-x-2">
         <div className="grid flex-1 gap-2">
           <Label htmlFor="brand_id" className="sr-only">
@@ -43,6 +46,7 @@ const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
           onClick={() => {
             setBrandId({
               offlineReference,
+              apiKey,
             });
           }}
         >
@@ -59,7 +63,7 @@ const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
           {formatErrorMessage(setBrandIdError)}
         </p>
       ) : null}
-    </>
+    </div>
   );
 };
 

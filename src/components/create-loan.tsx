@@ -26,6 +26,7 @@ const CreateLoan = ({ close }: { close: () => void }) => {
     setAmount(inputAmount);
     setError("");
   };
+
   if (merchantsLoading) {
     return (
       <div className="flex justify-center h-24 items-center w-full">
@@ -89,8 +90,18 @@ const CreateLoan = ({ close }: { close: () => void }) => {
               merchant,
               amount,
               name,
-            }).then(() => {
-              close();
+            }).then((res) => {
+              if (res?.payout?.payoutLink) {
+                // const newTab = window.open(
+                //   res?.payout?.payoutLink +
+                //     "&returnUrl=" +
+                //     window.location.origin,
+                //   "_blank"
+                // );
+                // newTab?.focus();
+              } else {
+                close();
+              }
             });
           }}
         >
