@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Loan } from "..";
 import { Button } from "./ui/button";
 import Modal from "./ui/modal";
+import { useGeneratePayoutLink } from "@/app/lms/services";
 
 const LoanItem = ({
   loan,
@@ -11,6 +12,11 @@ const LoanItem = ({
   onSimmulate: () => void;
 }) => {
   const [viewPayments, setViewPayments] = useState(false);
+  const [viewPayouts, setViewPayouts] = useState(false);
+
+  const { generatePayoutLinkAsync, generatePayoutLinkLoading } =
+    useGeneratePayoutLink();
+
   return (
     <div className="border rounded mb-3 p-3 flex items-end gap-4 justify-between">
       <div className="flex flex-col text-sm gap-1">
@@ -19,20 +25,43 @@ const LoanItem = ({
         <span>Reference: {loan?.referenceID}</span>
         <span>Merchant: {loan?.merchantReference}</span>
         <span>Status: {loan?.status}</span>
+        <span>Disbursement Status: {loan?.disbursementStatus}</span>
         <span>Received Payments: {loan?.payments?.length}</span>
-        {loan?.payments?.length ? (
-          <button
-            className="px-0 text-left text-sm text-blue-500 mt-2"
-            onClick={() => {
-              setViewPayments(true);
-            }}
-          >
-            View Payments
-          </button>
-        ) : null}
+        <div className="flex gap-5 items-center">
+          {loan?.payments?.length ? (
+            <button
+              className="px-0 text-left text-sm text-blue-500 mt-2"
+              onClick={() => {
+                setViewPayments(true);
+              }}
+            >
+              View Payments
+            </button>
+          ) : null}
+          {loan?.payouts?.length ? (
+            <button
+              className="px-0 text-left text-sm text-blue-500 mt-2"
+              onClick={() => {
+                setViewPayouts(true);
+              }}
+            >
+              View Payouts
+            </button>
+          ) : null}
+        </div>
       </div>
-      <div>
+      <div className="flex gap-2">
         <Button onClick={onSimmulate}>Simulate Payment</Button>
+        {loan?.disbursementStatus !== "SUCCESS" && (
+          <Button
+            onClick={() => {
+              generatePayoutLinkAsync(loan?.id);
+            }}
+            variant={"secondary"}
+          >
+            Payout
+          </Button>
+        )}
       </div>
       <Modal
         open={viewPayments}
@@ -75,6 +104,65 @@ const LoanItem = ({
                     {payment?.customer?.customerPhoneNumber && (
                       <span>
                         Customer Phone: {payment?.customer?.customerPhoneNumber}
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </Modal>
+      <Modal
+        open={viewPayouts}
+        close={() => setViewPayouts(false)}
+        title={`Loan ${loan?.name} Disbursements`}
+      >
+        <div>
+          {loan?.payouts?.map((payout) => {
+            return (
+              <div
+                className="border rounded p-2 flex flex-col gap-1 mb-2"
+                key={payout?.id}
+              >
+                <span>ID: {payout?.id}</span>
+                <span>Status: {payout?.status}</span>
+                <span>
+                  Amount: {payout?.amount} {payout?.currency}
+                </span>
+                <span>
+                  Fee: {payout?.fee} {payout?.currency}
+                </span>
+                <span>Order Reference: {payout?.orderReference}</span>
+                {payout?.note && <span>Note: {payout?.note}</span>}
+                {payout?.createdAt && (
+                  <span>Initiated: {formatDate(payout?.createdAt)}</span>
+                )}
+                {payout?.updatedAt && (
+                  <span>Updated: {formatDate(payout?.updatedAt)}</span>
+                )}
+                {payout?.beneficiary && (
+                  <>
+                    {payout?.beneficiary?.accountNumber && (
+                      <span>
+                        Account Number: {payout?.beneficiary?.accountNumber}
+                      </span>
+                    )}
+                    {payout?.beneficiary?.accountName && (
+                      <span>
+                        Account Name: {payout?.beneficiary?.accountName}
+                      </span>
+                    )}
+                    {payout?.beneficiary?.beneficiaryMobileNumber && (
+                      <span>
+                        Beneficiary Phone:{" "}
+                        {payout?.beneficiary?.beneficiaryMobileNumber}
+                      </span>
+                    )}
+                    {payout?.beneficiary?.beneficiaryEmail && (
+                      <span>
+                        Beneficiary Email:{" "}
+                        {payout?.beneficiary?.beneficiaryEmail}
                       </span>
                     )}
                   </>

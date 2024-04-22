@@ -98,6 +98,43 @@ export const useCreateLoan = () => {
   };
 };
 
+export const useGeneratePayoutLink = () => {
+  const { data, error, mutateAsync, mutate, isLoading } = useMutation(
+    async (id: string) => {
+      const { data } = await axios.post<{ payout?: { payoutLink: string } }>(
+        `${API_URL}/api/loans/generate-payout-link/${id}`
+      );
+      return data;
+    },
+    {
+      onSuccess: (res) => {
+        toast("Successfully generated a loan link", {
+          duration: 5000,
+          closeButton: true,
+        });
+        const newTab = window.open(
+          res?.payout?.payoutLink + "&returnUrl=" + window.location.origin,
+          "_blank"
+        );
+        newTab?.focus();
+      },
+      onError: (error) => {
+        toast(formatErrorMessage(error), {
+          duration: 5000,
+          closeButton: true,
+        });
+      },
+    }
+  );
+  return {
+    generatePayoutLink: mutate,
+    generatePayoutLinkAsync: mutateAsync,
+    generatePayoutLinkError: error,
+    generatePayoutLinkLoading: isLoading,
+    generatePayoutLinkData: data,
+  };
+};
+
 export const useGetLoans = () => {
   const { data, isLoading, error, refetch, isRefetching } = useQuery(
     ["loans"],
@@ -130,7 +167,7 @@ export const useUpdatePaymentsStatus = () => {
       return data;
     },
     {
-      onSuccess: (res) => {
+      onSuccess: () => {
         toast("Successfully updates loans", {
           duration: 5000,
           closeButton: true,
@@ -151,5 +188,37 @@ export const useUpdatePaymentsStatus = () => {
     updatePaymentsStatusError: error,
     updatePaymentsStatusLoading: isLoading,
     updatePaymentsStatusData: data,
+  };
+};
+
+export const useUpdatePayoutsStatus = () => {
+  const { loansRefetch } = useGetLoans();
+  const { data, error, mutateAsync, mutate, isLoading } = useMutation(
+    async () => {
+      const { data } = await axios.post(`${API_URL}/api/loans/payouts`, {});
+      return data;
+    },
+    {
+      onSuccess: () => {
+        toast("Successfully updates loans", {
+          duration: 5000,
+          closeButton: true,
+        });
+        loansRefetch();
+      },
+      onError: (error) => {
+        toast(formatErrorMessage(error), {
+          duration: 5000,
+          closeButton: true,
+        });
+      },
+    }
+  );
+  return {
+    updatePayoutsStatus: mutate,
+    updatePayoutsStatusAsync: mutateAsync,
+    updatePayoutsStatusError: error,
+    updatePayoutsStatusLoading: isLoading,
+    updatePayoutsStatusData: data,
   };
 };

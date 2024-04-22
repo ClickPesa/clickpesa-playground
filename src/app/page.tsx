@@ -1,7 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import { useGetLoans, useUpdatePaymentsStatus } from "./lms/services";
+import {
+  useGetLoans,
+  useUpdatePaymentsStatus,
+  useUpdatePayoutsStatus,
+} from "./lms/services";
 import { RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import EnableClickpesaGateway from "@/components/enable-clickpesa-gateway";
@@ -17,6 +21,8 @@ const Page = () => {
   const [openCreateLoan, setOpenCreateLoan] = useState(false);
   const { updatePaymentsStatus, updatePaymentsStatusLoading } =
     useUpdatePaymentsStatus();
+  const { updatePayoutsStatus, updatePayoutsStatusLoading } =
+    useUpdatePayoutsStatus();
   const { loans, loansLoading, loansRefetching, loansRefetch } = useGetLoans();
 
   if (loanToSimulate) {
@@ -40,8 +46,15 @@ const Page = () => {
           <Button
             variant={"outline"}
             size={"sm"}
-            disabled={updatePaymentsStatusLoading || loansRefetching}
-            onClick={() => updatePaymentsStatus()}
+            disabled={
+              updatePaymentsStatusLoading ||
+              loansRefetching ||
+              updatePayoutsStatusLoading
+            }
+            onClick={() => {
+              updatePaymentsStatus();
+              updatePayoutsStatus();
+            }}
           >
             <RefreshCcw
               size={18}

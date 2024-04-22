@@ -11,7 +11,8 @@ const CreateLoan = ({ close }: { close: () => void }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
-  const { createLoanAsync, createLoanLoading } = useCreateLoan();
+  const { createLoanAsync, createLoanLoading, createLoanData } =
+    useCreateLoan();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -62,58 +63,71 @@ const CreateLoan = ({ close }: { close: () => void }) => {
 
   return (
     <div className="space-y-4">
-      <p>Offline Reference: {merchant}</p>
-      <Input
-        placeholder="Loan Name"
-        value={name}
-        name="name"
-        onChange={handleNameChange}
-      />
-      <div className="flex items-center gap-2">
+      <div className="space-y-4">
+        <p>Offline Reference: {merchant}</p>
         <Input
-          placeholder="Amount"
-          type="text"
-          value={amount}
-          name="amount"
-          onChange={handleAmountChange}
+          placeholder="Loan Name"
+          value={name}
+          name="name"
+          onChange={handleNameChange}
         />
-        <Button
-          type="submit"
-          size="sm"
-          className="px-3"
-          disabled={createLoanLoading}
-          onClick={() => {
-            if (!merchant || !name || !amount) {
-              return setError("Fields are missing");
-            }
-            createLoanAsync({
-              merchant,
-              amount,
-              name,
-            }).then((res) => {
-              if (res?.payout?.payoutLink) {
-                const newTab = window.open(
-                  res?.payout?.payoutLink +
-                    "&returnUrl=" +
-                    window.location.origin,
-                  "_blank"
-                );
-                newTab?.focus();
-              } else {
-                close();
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="Amount"
+            type="text"
+            value={amount}
+            name="amount"
+            onChange={handleAmountChange}
+          />
+          <Button
+            type="submit"
+            size="sm"
+            className="px-3"
+            disabled={createLoanLoading}
+            onClick={() => {
+              if (!merchant || !name || !amount) {
+                return setError("Fields are missing");
               }
-            });
-          }}
-        >
-          <span className="sr-only">Set</span>
-          {createLoanLoading ? (
-            <div className="animate-spin h-4 w-4 border-t-2 border-white-900 rounded-full" />
-          ) : (
-            <ArrowRightIcon className="h-4 w-4" />
-          )}
-        </Button>
+              createLoanAsync({
+                merchant,
+                amount,
+                name,
+              }).then((res) => {
+                if (res?.payout?.payoutLink) {
+                  return;
+                } else {
+                  close();
+                }
+              });
+            }}
+          >
+            <span className="sr-only">Set</span>
+            {createLoanLoading ? (
+              <div className="animate-spin h-4 w-4 border-t-2 border-white-900 rounded-full" />
+            ) : (
+              <ArrowRightIcon className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {createLoanData?.payout?.payoutLink && (
+        <div>
+          <Button
+            onClick={() => {
+              const newTab = window.open(
+                createLoanData?.payout?.payoutLink +
+                  "&returnUrl=" +
+                  window.location.origin,
+                "_blank"
+              );
+              newTab?.focus();
+            }}
+          >
+            Disburse funds
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
