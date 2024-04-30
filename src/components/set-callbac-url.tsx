@@ -1,71 +1,43 @@
-import { useState } from "react"
-import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ArrowRightIcon, CogIcon } from "./Icons"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowRightIcon, CogIcon } from "./Icons";
+import { useSetBrandId } from "@/app/lms/services";
+import { formatErrorMessage } from "@/utils/util";
 
+export default function SetCallbackURL({
+  onReferenceChange,
+}: {
+  onReferenceChange: (reference: string) => void;
+}) {
+  const [callbackUrl, setCallbackUrl] = useState("");
+  const [offlineReference, setOfflineReference] = useState("");
 
-export default function SetCallbackURL() {
-  const [callbackUrl, setCallbackUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { setBrandIdAsync, setBrandIdLoading, setBrandIdError } =
+    useSetBrandId();
 
-  const handleSetClick = async () => {
-    if (!callbackUrl) {
-      setError('Callback URL cannot be empty');
-      return;
-    }
-    setLoading(true);
-    try {
-      let url = process.env.NEXT_PUBLIC_SET_EVENTS_CALLBACK_URL_ENDPOINT || "";
-      let options = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{"callback_url":"' + callbackUrl + '"}'
-      };
-      fetch(url, options)
-        .then(res => res.json())
-        .then(json => {
-          setLoading(false);
-          if (json?.events_callback_url) {
-            toast("Set Callback URL", {
-              description: json.message,
-            })
-            return setCallbackUrl(json.events_callback_url)
-          }
-          setError(json.message)
-        })
-        .catch(err => console.error('Error 🚨:' + err));
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      setCallbackUrl('')
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCallbackUrl(e.target.value);
-  };
-
-  const handleInputFocus = () => {
-    setError(''); // Clear the error when the input is focused
+  const handleSetClick = () => {
+    setBrandIdAsync({
+      offlineReference,
+      callbackUrl,
+    }).then(() => {
+      onReferenceChange(offlineReference);
+    });
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="font-bold" >
+        <Button variant="link" className="font-bold">
           <CogIcon className="mr-1 h-4 w-4" />
           Configuration
         </Button>
@@ -77,34 +49,55 @@ export default function SetCallbackURL() {
             Set a webhook URL to receive payment events notifications.
           </DialogDescription>
         </DialogHeader>
+        <div>
+          <Label htmlFor="offlineRefence" className="">
+            Offline Reference
+          </Label>
+          <Input
+            id="offlineRefence"
+            value={offlineReference}
+            onChange={(e) => setOfflineReference(e.target.value)}
+            readOnly={setBrandIdLoading}
+          />
+        </div>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
-            <Label htmlFor="link" className="sr-only">
-              Link
+            <Label htmlFor="link" className="">
+              Callback URL
             </Label>
             <Input
               id="link"
               value={callbackUrl}
-              onChange={handleInputChange}
-              readOnly={loading}
-              onFocus={handleInputFocus}
+              onChange={(e) => {
+                setCallbackUrl(e.target.value);
+              }}
+              readOnly={setBrandIdLoading}
             />
           </div>
-          <Button type="submit" size="sm" className="px-3" disabled={loading}
-            onClick={handleSetClick}>
-            <span className="sr-only">Set</span>
-            {loading ? <div className="animate-spin h-4 w-4 border-t-2 border-white-900 rounded-full" /> : <ArrowRightIcon className="h-4 w-4" />}
-          </Button>
         </div>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+        <Button
+          type="submit"
+          size="sm"
+          className="px-3 gap-2"
+          disabled={setBrandIdLoading}
+          onClick={handleSetClick}
+        >
+          <span className="sr-only">Set</span>
+          {setBrandIdLoading ? (
+            <div className="animate-spin h-4 w-4 border-t-2 border-white-900 rounded-full" />
+          ) : (
+            <>
+              Submit
+              <ArrowRightIcon className="h-4 w-4" />
+            </>
+          )}
+        </Button>
+        {setBrandIdError ? (
+          <p className="text-red-500 text-sm">
+            {formatErrorMessage(setBrandIdError)}
+          </p>
+        ) : null}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -98,7 +98,11 @@ export function BillPayHome({
         <Separator className="" />
         {!defaultReference && (
           <div className="flex h-10 items-center space-x-4 text-sm">
-            <SetCallbackURL />
+            <SetCallbackURL
+              onReferenceChange={(e) => {
+                setBillReference(e);
+              }}
+            />
           </div>
         )}
       </div>
