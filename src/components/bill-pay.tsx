@@ -62,9 +62,6 @@ export function BillPayHome({
       simulateBillPayAsync({
         amount: +amount,
         billReference,
-      }).then(() => {
-        setAmount("");
-        setBillReference("");
       });
     }
   };
