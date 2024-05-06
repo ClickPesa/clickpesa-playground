@@ -5,15 +5,50 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
-export const useSetBrandId = () => {
+export const useSetCallbackUrl = () => {
   const { loansRefetch } = useGetLoans();
   const { merchantsRefetch } = useGetMerchants();
   const { data, error, mutateAsync, mutate, isLoading } = useMutation(
     async (payload: {
-      offlineReference: string;
+      offlineReference?: string;
       apiKey?: string;
+      clientId?: string;
       callbackUrl?: string;
     }) => {
+      const { data } = await axios.post(
+        `${API_URL}/api/merchants/set-merchant-events-callback`,
+        payload,
+        {
+          timeout: 20000,
+        }
+      );
+      return data;
+    },
+    {
+      onSuccess: (res) => {
+        toast("Successfully set clickpesa callback url", {
+          duration: 5000,
+          closeButton: true,
+        });
+        loansRefetch();
+        merchantsRefetch();
+      },
+    }
+  );
+  return {
+    setBrandId: mutate,
+    setBrandIdAsync: mutateAsync,
+    setBrandIdError: error,
+    setBrandIdLoading: isLoading,
+    setBrandIdData: data,
+  };
+};
+
+export const useSetBrandId = () => {
+  const { loansRefetch } = useGetLoans();
+  const { merchantsRefetch } = useGetMerchants();
+  const { data, error, mutateAsync, mutate, isLoading } = useMutation(
+    async (payload: { offlineReference: string; callbackUrl: string }) => {
       const { data } = await axios.post(
         `${API_URL}/api/merchants/sync-merchant-brand-id`,
         payload,

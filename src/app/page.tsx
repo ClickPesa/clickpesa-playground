@@ -123,11 +123,6 @@ const Page = () => {
       <Modal
         open={openCreateLoan}
         close={() => setOpenCreateLoan(false)}
-        footer={
-          <Button type="button" variant="secondary">
-            Close
-          </Button>
-        }
         title="Create Loan"
       >
         {openCreateLoan && (

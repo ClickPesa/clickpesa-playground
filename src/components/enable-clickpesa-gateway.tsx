@@ -3,39 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRightIcon } from "./Icons";
-import { useSetBrandId } from "@/app/lms/services";
+import { useSetCallbackUrl } from "@/app/lms/services";
 import { formatErrorMessage } from "@/utils/util";
 
-const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
-  const [offlineReference, setOfflineReference] = useState("");
+const EnableClickpesaGateway = ({}: { close: () => void }) => {
   const [apiKey, setApiKey] = useState("");
-  const { setBrandIdLoading, setBrandIdError, setBrandId } = useSetBrandId();
+  const [clientId, setClientId] = useState("");
+  const { setBrandIdLoading, setBrandIdError, setBrandId } =
+    useSetCallbackUrl();
 
   return (
     <div className="space-y-5">
       <div>
-        <Label htmlFor="api_key" className="sr-only">
-          API Key
-        </Label>
+        <Label htmlFor="client_id">Client ID</Label>
         <Input
-          id="api_key"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
+          id="client_id"
+          value={clientId}
+          onChange={(e) => setClientId(e.target.value)}
           readOnly={setBrandIdLoading}
-          placeholder="Enter Your API Key"
+          placeholder="Enter Your Client ID"
         />
       </div>
-      <div className="flex items-center space-x-2">
-        <div className="grid flex-1 gap-2">
-          <Label htmlFor="brand_id" className="sr-only">
-            Brand ID
-          </Label>
+
+      <div className="flex items-end space-x-2">
+        <div className="flex-1">
+          <Label htmlFor="api_key">API Key</Label>
           <Input
-            id="brand_id"
-            value={offlineReference}
-            onChange={(e) => setOfflineReference(e.target.value)}
+            id="api_key"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
             readOnly={setBrandIdLoading}
-            placeholder="Enter Your Offline Reference"
+            placeholder="Enter Your API Key"
           />
         </div>
         <Button
@@ -45,8 +43,8 @@ const EnableClickpesaGateway = ({ close }: { close: () => void }) => {
           disabled={setBrandIdLoading}
           onClick={() => {
             setBrandId({
-              offlineReference,
               apiKey,
+              clientId,
             });
           }}
         >
