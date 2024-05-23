@@ -92,7 +92,7 @@ export function BillPayHome({
             Simulate Payment
           </Button>
         </div>
-        <Separator className="" />
+        {/* <Separator className="" />
         {!defaultReference && (
           <div className="flex h-10 items-center space-x-4 text-sm">
             <SetCallbackURL
@@ -101,7 +101,7 @@ export function BillPayHome({
               }}
             />
           </div>
-        )}
+        )} */}
       </div>
       <div className="w-1/2 bg-[#1E1E2D] p-8">
         {showLogs && (
