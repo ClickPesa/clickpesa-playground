@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ArrowRightIcon } from "./Icons";
+import { toast } from "sonner";
 
 const CreateLoan = ({ close }: { close: () => void }) => {
   const { merchants, merchantsLoading } = useGetMerchants();
@@ -113,6 +114,22 @@ const CreateLoan = ({ close }: { close: () => void }) => {
       </div>
       {createLoanData?.payout?.payoutLink && (
         <div>
+          <div>
+            <a href={`${createLoanData?.checkout?.checkoutLink}`}>
+              Checkout Link
+            </a>
+            <button
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(createLoanData.checkout.checkoutLink)
+                  .finally(() => {
+                    toast.success("Copied", { duration: 5000 });
+                  });
+              }}
+            >
+              Copy
+            </button>
+          </div>
           <Button
             onClick={() => {
               const newTab = window.open(

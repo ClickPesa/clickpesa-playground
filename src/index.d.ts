@@ -55,6 +55,7 @@ export interface Loan {
     | "PROCESSING"
     | "INCOMPLETE"
     | "PARTIAL_PAID";
+    checkoutLink: string
 }
 
 export interface Merchant {

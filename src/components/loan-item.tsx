@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Loan } from "..";
 import { Button } from "./ui/button";
 import Modal from "./ui/modal";
-import { useGeneratePayoutLink } from "@/app/lms/services";
+import {
+  useGenerateCheckoutLink,
+  useGeneratePayoutLink,
+} from "@/app/lms/services";
+import { toast } from "sonner";
 
 const LoanItem = ({
   loan,
@@ -14,8 +18,9 @@ const LoanItem = ({
   const [viewPayments, setViewPayments] = useState(false);
   const [viewPayouts, setViewPayouts] = useState(false);
 
-  const { generatePayoutLinkAsync, generatePayoutLinkLoading } =
-    useGeneratePayoutLink();
+  const { generatePayoutLinkAsync } = useGeneratePayoutLink();
+  const { generateCheckoutLink, generateCheckoutLinkData } =
+    useGenerateCheckoutLink();
 
   return (
     <div className="border rounded mb-3 p-3 flex items-end gap-4 justify-between">
@@ -27,6 +32,22 @@ const LoanItem = ({
         <span>Status: {loan?.status}</span>
         <span>Disbursement Status: {loan?.disbursementStatus}</span>
         <span>Received Payments: {loan?.payments?.length}</span>
+        {loan?.checkoutLink && (
+          <div className="flex gap-2">
+            <a href={`${loan?.checkoutLink}`} target="_blank">
+              Checkout Link
+            </a>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(loan.checkoutLink).finally(() => {
+                  toast.success("Copied", { duration: 5000 });
+                });
+              }}
+            >
+              Copy
+            </button>
+          </div>
+        )}
         <div className="flex gap-5 items-center">
           {loan?.payments?.length ? (
             <button
@@ -50,8 +71,18 @@ const LoanItem = ({
           ) : null}
         </div>
       </div>
+
       <div className="flex gap-2">
         <Button onClick={onSimmulate}>Simulate Payment</Button>
+        {!(generateCheckoutLinkData || loan?.checkoutLink) && (
+          <Button
+            onClick={() => {
+              generateCheckoutLink(loan?.id);
+            }}
+          >
+            Generate Checkout Link
+          </Button>
+        )}
         {loan?.disbursementStatus !== "SUCCESS" && (
           <Button
             onClick={() => {

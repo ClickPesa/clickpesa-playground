@@ -26,7 +26,7 @@ export const useSetCallbackUrl = () => {
     },
     {
       onSuccess: (res) => {
-        toast("Successfully set clickpesa callback url", {
+        toast("Successfully set merchant reference", {
           duration: 5000,
           closeButton: true,
         });
@@ -106,10 +106,10 @@ export const useCreateLoan = () => {
   const { loansRefetch } = useGetLoans();
   const { data, error, mutateAsync, mutate, isLoading } = useMutation(
     async (payload: { amount: string; merchant: string; name: string }) => {
-      const { data } = await axios.post<{ payout?: { payoutLink: string } }>(
-        `${API_URL}/api/loans`,
-        payload
-      );
+      const { data } = await axios.post<{
+        payout?: { payoutLink: string };
+        checkout: { checkoutLink: string };
+      }>(`${API_URL}/api/loans`, payload);
       return data;
     },
     {
@@ -147,7 +147,7 @@ export const useGeneratePayoutLink = () => {
     },
     {
       onSuccess: (res) => {
-        toast("Successfully generated a loan link", {
+        toast("Successfully generated a payout link", {
           duration: 5000,
           closeButton: true,
         });
@@ -171,6 +171,40 @@ export const useGeneratePayoutLink = () => {
     generatePayoutLinkError: error,
     generatePayoutLinkLoading: isLoading,
     generatePayoutLinkData: data,
+  };
+};
+
+export const useGenerateCheckoutLink = () => {
+  const { loansRefetch } = useGetLoans();
+  const { data, error, mutateAsync, mutate, isLoading } = useMutation(
+    async (id: string) => {
+      const { data } = await axios.post<{
+        checkout?: { checkoutLink: string };
+      }>(`${API_URL}/api/loans/generate-checkout-link/${id}`);
+      return data;
+    },
+    {
+      onSuccess: (res) => {
+        loansRefetch();
+        toast("Successfully generated a checkout link", {
+          duration: 5000,
+          closeButton: true,
+        });
+      },
+      onError: (error) => {
+        toast(formatErrorMessage(error), {
+          duration: 5000,
+          closeButton: true,
+        });
+      },
+    }
+  );
+  return {
+    generateCheckoutLink: mutate,
+    generateCheckoutLinkAsync: mutateAsync,
+    generateCheckoutLinkError: error,
+    generateCheckoutLinkLoading: isLoading,
+    generateCheckoutLinkData: data,
   };
 };
 
