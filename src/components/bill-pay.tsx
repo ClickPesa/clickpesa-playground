@@ -4,8 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CheckCircleIcon, ErrorIcon } from "./Icons";
 import { useState } from "react";
-import SetCallbackURL from "./set-callbac-url";
-import { Separator } from "./ui/separator";
 import { useSimulateBillpay } from "@/service/billpay";
 import { formatErrorMessage } from "@/utils/util";
 
@@ -92,16 +90,6 @@ export function BillPayHome({
             Simulate Payment
           </Button>
         </div>
-        {/* <Separator className="" />
-        {!defaultReference && (
-          <div className="flex h-10 items-center space-x-4 text-sm">
-            <SetCallbackURL
-              onReferenceChange={(e) => {
-                setBillReference(e);
-              }}
-            />
-          </div>
-        )} */}
       </div>
       <div className="w-1/2 bg-[#1E1E2D] p-8">
         {showLogs && (

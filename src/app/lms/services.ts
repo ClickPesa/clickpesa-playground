@@ -5,62 +5,19 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
-export const useSetCallbackUrl = () => {
+export const useGetMerchant = () => {
   const { loansRefetch } = useGetLoans();
   const { merchantsRefetch } = useGetMerchants();
   const { data, error, mutateAsync, mutate, isLoading } = useMutation(
-    async (payload: {
-      offlineReference?: string;
-      apiKey?: string;
-      clientId?: string;
-      callbackUrl?: string;
-    }) => {
-      const { data } = await axios.post(
-        `${API_URL}/api/merchants/set-merchant-events-callback`,
-        payload,
-        {
-          timeout: 20000,
-        }
-      );
+    async (payload: { apiKey?: string; clientId?: string }) => {
+      const { data } = await axios.post(`${API_URL}/api/merchant`, payload, {
+        timeout: 20000,
+      });
       return data;
     },
     {
       onSuccess: (res) => {
-        toast("Successfully set merchant reference", {
-          duration: 5000,
-          closeButton: true,
-        });
-        loansRefetch();
-        merchantsRefetch();
-      },
-    }
-  );
-  return {
-    setBrandId: mutate,
-    setBrandIdAsync: mutateAsync,
-    setBrandIdError: error,
-    setBrandIdLoading: isLoading,
-    setBrandIdData: data,
-  };
-};
-
-export const useSetBrandId = () => {
-  const { loansRefetch } = useGetLoans();
-  const { merchantsRefetch } = useGetMerchants();
-  const { data, error, mutateAsync, mutate, isLoading } = useMutation(
-    async (payload: { offlineReference: string; callbackUrl: string }) => {
-      const { data } = await axios.post(
-        `${API_URL}/api/merchants/sync-merchant-brand-id`,
-        payload,
-        {
-          timeout: 20000,
-        }
-      );
-      return data;
-    },
-    {
-      onSuccess: (res) => {
-        toast("Successfully set clickpesa offline reference", {
+        toast("Successfully retrieved merchant reference", {
           duration: 5000,
           closeButton: true,
         });

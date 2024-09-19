@@ -3,14 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRightIcon } from "./Icons";
-import { useSetCallbackUrl } from "@/app/lms/services";
+import { useGetMerchant } from "@/app/lms/services";
 import { formatErrorMessage } from "@/utils/util";
 
 const EnableClickpesaGateway = ({}: { close: () => void }) => {
   const [apiKey, setApiKey] = useState("");
   const [clientId, setClientId] = useState("");
-  const { setBrandIdLoading, setBrandIdError, setBrandId } =
-    useSetCallbackUrl();
+  const { setBrandIdLoading, setBrandIdError, setBrandId } = useGetMerchant();
 
   return (
     <div className="space-y-5">
