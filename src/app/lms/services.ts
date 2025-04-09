@@ -11,7 +11,7 @@ export const useGetMerchant = () => {
   const { data, error, mutateAsync, mutate, isLoading } = useMutation(
     async (payload: { apiKey?: string; clientId?: string }) => {
       const { data } = await axios.post(`${API_URL}/api/merchant`, payload, {
-        timeout: 20000,
+        // timeout: 20000,
       });
       return data;
     },

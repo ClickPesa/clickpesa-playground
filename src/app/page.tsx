@@ -19,9 +19,9 @@ const Page = () => {
   const [openEnableClickpesa, setOpenEnableClickpesa] = useState(false);
   const [loanToSimulate, setLoanToSimulate] = useState<Loan | null>(null);
   const [openCreateLoan, setOpenCreateLoan] = useState(false);
-  const { updatePaymentsStatus, updatePaymentsStatusLoading } =
+  const { updatePaymentsStatusAsync, updatePaymentsStatusLoading } =
     useUpdatePaymentsStatus();
-  const { updatePayoutsStatus, updatePayoutsStatusLoading } =
+  const { updatePayoutsStatusAsync, updatePayoutsStatusLoading } =
     useUpdatePayoutsStatus();
   const { loans, loansLoading, loansRefetching, loansRefetch } = useGetLoans();
 
@@ -51,9 +51,9 @@ const Page = () => {
               loansRefetching ||
               updatePayoutsStatusLoading
             }
-            onClick={() => {
-              updatePaymentsStatus();
-              updatePayoutsStatus();
+            onClick={async () => {
+              await updatePaymentsStatusAsync();
+              await updatePayoutsStatusAsync();
             }}
           >
             <RefreshCcw
